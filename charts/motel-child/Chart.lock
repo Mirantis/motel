@@ -14,5 +14,8 @@ dependencies:
 - name: fluent-bit
   repository: https://fluent.github.io/helm-charts
   version: 0.47.10
-digest: sha256:5d51e7e76aaa2891e2c1d115de6e9aa40abcd62bba9a286fdcdf7d2ad3bb2840
-generated: "2024-11-18T16:25:44.543741+01:00"
+- name: opencost
+  repository: https://opencost.github.io/opencost-helm-chart
+  version: 1.42.3
+digest: sha256:841e1f0434b1380f50d9e6f25f0ad29a7402e62a053b3fa52c466882e966974b
+generated: "2024-12-11T15:34:53.25708+02:00"

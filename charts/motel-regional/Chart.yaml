@@ -1,7 +1,7 @@
 apiVersion: v2
 name: motel-regional
 description: A Helm chart that deploys Grafana, and VictoriaMetrics.
-version: 0.1.1
+version: 0.1.2
 appVersion: "1.0"
 dependencies:
   - name: grafana-operator
@@ -16,3 +16,7 @@ dependencies:
     version: "0.7.*"
     repository: https://victoriametrics.github.io/helm-charts/
     condition: victoria-logs-single.enabled
+  - name: external-dns
+    version: "1.15.0"
+    repository: "https://kubernetes-sigs.github.io/external-dns/"
+    condition: external-dns.enabled

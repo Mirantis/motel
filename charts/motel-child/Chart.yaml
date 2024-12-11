@@ -1,7 +1,7 @@
 apiVersion: v2
 name: motel-child
 description: A Helm chart that deploys Grafana, OpenTelemetry, and VictoriaMetrics.
-version: 0.1.1
+version: 0.1.2
 appVersion: "1.0"
 dependencies:
   - name: victoria-metrics-operator
@@ -24,3 +24,8 @@ dependencies:
     version: "0.47.*"
     repository: https://fluent.github.io/helm-charts
     condition: fluent-bit.enabled
+  - name: opencost
+    version: "1.42.*"
+    repository: https://opencost.github.io/opencost-helm-chart
+    condition: opencost.enabled
+

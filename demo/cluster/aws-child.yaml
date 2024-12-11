@@ -22,10 +22,16 @@ spec:
   template: aws-standalone-cp-0-0-3
   servicesPriority: 100
   services:
-    - template: motel-child-0-1-1
+    - template: motel-child-0-1-2
       name: motel-child
       namespace: motel-child
       values: |
+        opencost:
+          prometheus:
+            external:
+              url: "https://vmauth.hmc0.example.net/vm/select/0/prometheus"
+          exporter:
+            defaultClusterId: "aws-child0"
         victoriametrics:
           vmagent:
             remoteWriteUrl: https://vmauth.hmc0.example.net/vm/insert/0/prometheus/api/v1/write

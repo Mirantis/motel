@@ -40,7 +40,8 @@ export KUBECONFIG=/tmp/hmc-aws-reg0-kubeconfig.yaml
 kubectl get svc -n ingress-nginx ingress-nginx-controller
 ```
 
-With your preffered DNS hosting, set your ingress domains to resolve to that IP/DNS name, that's how the traffic will flow to/from regional cluster. Eventually we plan to use K8s ExternalDNS to simplify this process.
+With your preffered DNS hosting, set your ingress domains to resolve to that IP/DNS name, that's how the traffic will flow to/from regional cluster. 
+To simplify this process it is posssible to enable [external-dns](https://kubernetes-sigs.github.io/external-dns/) helm chart deployment in values.
 
 Once your domain is resolvable your Grafana and vmauth should be accessible.
 

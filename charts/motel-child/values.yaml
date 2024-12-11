@@ -18,6 +18,22 @@ prometheus-node-exporter:
   extraArgs:
     - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
     - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
+opencost:
+  enabled: true
+  opencost:
+    prometheus:
+      username: "motel"
+      password: "motel"
+      external:
+        enabled: true
+        url: "https://vmauth.hmc0.example.net/vm/select/0/prometheus"
+      internal:
+        enabled: false
+    exporter:
+      defaultClusterId: "hmc-child"
+      extraEnv:
+        EMIT_KSM_V1_METRICS: "false"
+        EMIT_KSM_V1_METRICS_ONLY: "true"
 victoriametrics:
   enabled: true
   vmagent:
