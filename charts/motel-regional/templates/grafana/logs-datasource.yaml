@@ -12,7 +12,7 @@ spec:
     isDefault: true
     name: vls
     type: victorialogs-datasource
-    url: http://{{ .Release.Name }}-victoria-logs-single-server:9428
+    url: "http://{{ .Release.Name }}-victoria-logs-single-server:9428"
   instanceSelector:
     matchLabels:
       dashboards: grafana

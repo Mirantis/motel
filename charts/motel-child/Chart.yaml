@@ -28,4 +28,7 @@ dependencies:
     version: "1.42.*"
     repository: https://opencost.github.io/opencost-helm-chart
     condition: opencost.enabled
-
+  - name: opentelemetry-operator
+    version: "0.75.*"
+    repository: "https://open-telemetry.github.io/opentelemetry-helm-charts"
+    condition: opentelemetry-operator.enabled

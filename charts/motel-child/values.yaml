@@ -34,6 +34,11 @@ opencost:
       extraEnv:
         EMIT_KSM_V1_METRICS: "false"
         EMIT_KSM_V1_METRICS_ONLY: "true"
+opentelemetry-operator:
+  enabled: true
+  manager:
+    collectorImage:
+      repository: "otel/opentelemetry-collector-contrib"
 victoriametrics:
   enabled: true
   vmagent:

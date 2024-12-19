@@ -1,4 +1,27 @@
 {{- if .Values.grafana.enabled }}
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: victorialogs
+  namespace: {{ $.Release.Namespace }}
+spec:
+  datasource:
+    access: proxy
+    isDefault: false
+    name: victorialogs
+    type: "victorialogs-datasource"
+    url: "http://vmselect-cluster.{{ .Release.Namespace }}:8481"
+    basicAuth: true
+    basicAuthUser: motel
+    secureJsonData:
+      basicAuthPassword: motel
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  resyncPeriod: 5m
+---
 {{- range .Values.grafana.logSources }}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource

@@ -1,0 +1,14 @@
+{{- if index .Values "opentelemetry-operator" "enabled" | default false }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Name }}-opentelemetry-operator-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-opentelemetry-operator-manager
+subjects:
+  - kind: ServiceAccount
+    name: opentelemetry-operator
+    namespace: {{ .Release.Namespace }}
+{{- end}}

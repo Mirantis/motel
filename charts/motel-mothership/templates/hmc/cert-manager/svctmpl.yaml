@@ -2,7 +2,7 @@
 apiVersion: hmc.mirantis.com/v1alpha1
 kind: ServiceTemplate
 metadata:
-  name: cert-manager-1-16-1
+  name: cert-manager
   namespace: hmc-system
 spec:
   helm:
@@ -11,6 +11,5 @@ spec:
       kind: HelmChart
       name: cert-manager
       namespace: hmc-system
-    chartVersion: 1.16.1
   providers: []
 {{- end }}

@@ -17,6 +17,6 @@ dependencies:
     repository: https://victoriametrics.github.io/helm-charts/
     condition: victoria-logs-single.enabled
   - name: external-dns
-    version: "1.15.0"
+    version: "1.15.*"
     repository: "https://kubernetes-sigs.github.io/external-dns/"
     condition: external-dns.enabled

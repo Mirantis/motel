@@ -5,5 +5,8 @@ dependencies:
 - name: victoria-metrics-operator
   repository: https://victoriametrics.github.io/helm-charts/
   version: 0.36.0
-digest: sha256:2292ec0cf4531b9d855f474d8e4162ef142c2e2cf18fd1993aacb217003bb3e5
-generated: "2024-12-03T12:02:24.207706+01:00"
+- name: opentelemetry-operator
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.75.1
+digest: sha256:23cadc16d149fd2b1dce44d3f3f9b812840afde1e44d8181502c01bc0940b1ed
+generated: "2024-12-17T11:38:56.253667+02:00"

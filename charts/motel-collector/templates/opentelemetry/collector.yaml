@@ -1,0 +1,149 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: {{ .Release.Name }}-k8s-cluster
+spec:
+  mode: deployment
+  serviceAccount: "{{ .Release.Name }}-k8s-cluster-collector"
+  config:
+    receivers:
+      k8s_cluster:
+        allocatable_types_to_report:
+          - cpu
+          - memory
+          - storage
+        auth_type: serviceAccount
+        collection_interval: 10s
+        node_conditions_to_report:
+          - Ready
+          - MemoryPressure
+          - DiskPressure
+          - NetworkUnavailable
+      k8sobjects:
+        auth_type: serviceAccount
+        objects:
+          - name: pods
+            mode: pull
+            label_selector: environment in (production),tier in (frontend)
+            field_selector: status.phase=Running
+            interval: 1m
+          - exclude_watch_type:
+              - DELETED
+            group: events.k8s.io
+            mode: watch
+            name: events
+
+    processors:
+      k8sattributes:
+        extract:
+          annotations:
+            - from: pod
+              key_regex: (.*)
+              tag_name: $$1
+          labels:
+            - from: pod
+              key: app.kubernetes.io/name
+              tag_name: service.name
+            - from: pod
+              key: k8s-app
+              tag_name: service.name
+            - from: pod
+              key: app.kubernetes.io/instance
+              tag_name: k8s.app.instance
+            - from: pod
+              key: app.kubernetes.io/version
+              tag_name: service.version
+            - from: pod
+              key: app.kubernetes.io/component
+              tag_name: k8s.app.component
+            - from: pod
+              key_regex: (.*)
+              tag_name: $$1
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.uid
+            - k8s.node.name
+            - k8s.pod.start_time
+            - k8s.deployment.name
+            - k8s.replicaset.name
+            - k8s.replicaset.uid
+            - k8s.daemonset.name
+            - k8s.daemonset.uid
+            - k8s.job.name
+            - k8s.job.uid
+            - k8s.container.name
+            - k8s.cronjob.name
+            - k8s.statefulset.name
+            - k8s.statefulset.uid
+            - container.image.tag
+            - container.image.name
+            - k8s.cluster.uid
+        passthrough: false
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.name
+              - from: resource_attribute
+                name: k8s.namespace.name
+              - from: resource_attribute
+                name: k8s.node.name
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.name
+              - from: resource_attribute
+                name: k8s.namespace.name
+          - sources:
+              - from: connection
+      resourcedetection/env:
+        detectors:
+          - env
+        override: false
+        timeout: 2s
+
+      batch: {}
+
+    exporters:
+      prometheusremotewrite:
+        endpoint: {{ .Values.motel.vm_endpoint }}
+        tls:
+          insecure: true
+        auth:
+          authenticator: basicauth/client
+      otlphttp:
+        logs_endpoint: {{ .Values.motel.vlogs_endpoint }}
+
+    extensions:
+      basicauth/client:
+        client_auth:
+          username: motel
+          password: motel
+
+    service:
+      extensions:
+        - basicauth/client
+      pipelines:
+        logs:
+          exporters:
+            - otlphttp
+          processors:
+            - k8sattributes
+            - resourcedetection/env
+            - batch
+          receivers:
+            - k8sobjects
+        metrics:
+          exporters:
+            - prometheusremotewrite
+          processors:
+            - k8sattributes
+            - resourcedetection/env
+            - batch
+          receivers:
+            - k8s_cluster

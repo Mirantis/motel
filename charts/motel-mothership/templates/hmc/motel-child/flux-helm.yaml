@@ -12,6 +12,6 @@ spec:
   reconcileStrategy: ChartVersion
   sourceRef:
     kind: HelmRepository
-    name: motel
-  version: 0.1.2
+    name: {{ .Values.hmc.motel.repo.name }}
+  version: {{ .Values.hmc.motel.charts.child.version }}
 {{- end }}

@@ -17,5 +17,8 @@ dependencies:
 - name: opencost
   repository: https://opencost.github.io/opencost-helm-chart
   version: 1.42.3
-digest: sha256:841e1f0434b1380f50d9e6f25f0ad29a7402e62a053b3fa52c466882e966974b
-generated: "2024-12-11T15:34:53.25708+02:00"
+- name: opentelemetry-operator
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.75.1
+digest: sha256:fe0cf8c97a0e4986489f788a9aa9a717e7d78cf54b044684e9c2cdb58f98741f
+generated: "2024-12-17T11:38:45.389027+02:00"

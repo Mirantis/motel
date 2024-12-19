@@ -5,7 +5,7 @@
 {{- $dashboardBase := base $dashboardFile }}
 {{- $dashboardName := (trimSuffix (ext $dashboardBase) $dashboardBase) -}}
 {{- $dashboardData := fromYaml (tpl ($.Files.Get $dashboardFile) $ctx) -}}
-{{- $dashboardResult := toRawJson $dashboardData -}}
+{{- $dashboardResult := toRawJson $dashboardData }}
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:

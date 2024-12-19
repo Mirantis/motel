@@ -1,0 +1,5 @@
+motel:
+  vlogs_endpoint: http://vminsert-cluster:8480/insert/opentelemetry/v1/logs
+  vm_endpoint: http://vminsert-cluster:8480/insert/0/prometheus/api/v1/write
+prometheus-operator-crds:
+  enabled: true

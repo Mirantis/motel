@@ -1,1 +1,4 @@
 charts/*/charts
+bin
+dev
+external-dns-aws-credentials

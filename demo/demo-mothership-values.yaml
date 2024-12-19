@@ -20,15 +20,13 @@ grafana:
     host: grafana.example.net
   alerts:
     enabled: true
-  # defaults to promxy url
-  promxyDatasourceUrl:
   logSources:
-  - name: hmc0-logs
-    url: https://vmauth.hmc0.example.net/vls
-    type: victorialogs-datasource
-    auth:
-      username: motel
-      password: motel
+    - name: hmc0-logs
+      url: https://vmauth.hmc0.example.net/vls
+      type: victorialogs-datasource
+      auth:
+        username: motel
+        password: motel
   security:
     admin_user: motel
     admin_password: motel
@@ -88,3 +86,4 @@ promxy:
         auth:
           username: motel
           password: motel
+

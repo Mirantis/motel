@@ -1,0 +1,141 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: {{ .Release.Name}}-node-exporter
+spec:
+  mode: daemonset
+  serviceAccount: "{{ .Release.Name }}-k8s-cluster-collector"
+  targetAllocator:
+    image: "ghcr.io/open-telemetry/opentelemetry-operator/target-allocator:main"
+    enabled: true
+    serviceAccount: "{{ .Release.Name }}-node-exporter-ta"
+    allocationStrategy: per-node
+    prometheusCR:
+      enabled: true
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      prometheus:
+        config:
+          scrape_configs: []
+
+    processors:
+      k8sattributes:
+        extract:
+          annotations:
+            - from: pod
+              key_regex: (.*)
+              tag_name: $$1
+          labels:
+            - from: pod
+              key: app.kubernetes.io/name
+              tag_name: service.name
+            - from: pod
+              key: k8s-app
+              tag_name: service.name
+            - from: pod
+              key: app.kubernetes.io/instance
+              tag_name: k8s.app.instance
+            - from: pod
+              key: app.kubernetes.io/version
+              tag_name: service.version
+            - from: pod
+              key: app.kubernetes.io/component
+              tag_name: k8s.app.component
+            - from: pod
+              key_regex: (.*)
+              tag_name: $$1
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.uid
+            - k8s.node.name
+            - k8s.pod.start_time
+            - k8s.deployment.name
+            - k8s.replicaset.name
+            - k8s.replicaset.uid
+            - k8s.daemonset.name
+            - k8s.daemonset.uid
+            - k8s.job.name
+            - k8s.job.uid
+            - k8s.container.name
+            - k8s.cronjob.name
+            - k8s.statefulset.name
+            - k8s.statefulset.uid
+            - container.image.tag
+            - container.image.name
+            - k8s.cluster.uid
+        passthrough: false
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.name
+              - from: resource_attribute
+                name: k8s.namespace.name
+              - from: resource_attribute
+                name: k8s.node.name
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.name
+              - from: resource_attribute
+                name: k8s.namespace.name
+          - sources:
+              - from: connection
+      resourcedetection/env:
+        detectors:
+          - env
+        override: false
+        timeout: 2s
+
+      batch: {}
+
+    extensions:
+      basicauth/client:
+        client_auth:
+          username: motel
+          password: motel
+
+    exporters:
+      prometheusremotewrite:
+        endpoint: {{ .Values.motel.vm_endpoint }}
+        tls:
+          insecure: true
+        auth:
+          authenticator: basicauth/client
+      otlphttp:
+        logs_endpoint: {{ .Values.motel.vlogs_endpoint }}
+
+    service:
+      extensions:
+        - basicauth/client
+      pipelines:
+        logs:
+          exporters:
+            - otlphttp
+          processors:
+            - k8sattributes
+            - resourcedetection/env
+            - batch
+          receivers:
+            - otlp
+        metrics:
+          receivers:
+            - prometheus
+          processors:
+            - k8sattributes
+            - resourcedetection/env
+            - batch
+          exporters:
+            - prometheusremotewrite
+
